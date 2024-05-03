@@ -21,7 +21,7 @@ header h1 {
     font-weight: 900;
 }
 
-#container canvas {
+#container3D canvas {
     width: 100vw;
     height: 100vh;
     position: absolute;

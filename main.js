@@ -101,9 +101,9 @@ animate();
 
 const raycaster = new THREE.Raycaster();
 
-document.addEventListener("mousedown", onMouseDown);
+document.addEventListener("pointerdown", onPointerDown);
 
-function onMouseDown(event) {
+function onPointerDown(event) {
     const coords = new THREE.Vector2(
         (event.clientX / renderer.domElement.clientWidth) * 2 -1,
         -((event.clientY / renderer.domElement.clientHeight) * 2 -1)
