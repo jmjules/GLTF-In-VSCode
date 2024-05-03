@@ -3,10 +3,33 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 
+const renderer = new THREE.WebGLRenderer( {alpha: true, antialias: true} ); //alpha true allows for transparent background
+renderer.outputColorSpace = THREE.SRGBColorSpace //this is the default
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
+
+document.getElementById("container3D").appendChild(renderer.domElement);
+
 const scene = new THREE.Scene();
 const camera =  new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-// camera.position.z = objectToRender === "camera" ? 5 : 0;
-camera.position.set(2, 3, 3)
+camera.position.set(2, 3, 3);
+camera.lookAt(0, 0, 0)
+
+//######## Add controls to the camera########
+const controls = new OrbitControls(camera, renderer.domElement)
+
+//############ Add lights #############
+// const topLight = new THREE.DirectionalLight(0xffffff, 1);
+// topLight.position.set(50, 50, 100);
+// topLight.castShadow = true;
+// scene.add(topLight);
+
+const spotLight = new THREE.SpotLight(0xffffff, 20, 100, 0.2, 0.5);
+spotLight.position.set(0, 6, 0);
+scene.add(spotLight);
+
+const ambientLight = new THREE.AmbientLight(0x333333, 2);
+scene.add(ambientLight);
 
 //########for tracking mouse cursor to let obj face it
 // let mouseX = window.innerWidth / 2;
@@ -16,18 +39,24 @@ camera.position.set(2, 3, 3)
 //scene to render
 let object;
 
-let controls;
-
 // let objectToRender = "camera";
 let objectToRender = "desk";
 
-
+//######### load first GLTF file ###########
 const loader = new GLTFLoader();
 loader.load(
     `models/${objectToRender}/scene.gltf`,
     function ( gltf) {
         //load file to the scene
         object = gltf.scene;
+
+        object.traverse((child) => {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        })
+
         scene.add(object);
     },
     function (xhr) {
@@ -35,39 +64,12 @@ loader.load(
         console.log((xhr.loaded / xhr.total * 100) + "% loaded");
     },
     function (error) {
-        //if there is an error, log it
         console.error(error);
     }
 )
 
 
-const renderer = new THREE.WebGLRenderer( {alpha: true} ); //alpha true allows for transparent background
-renderer.setSize(window.innerWidth, window.innerHeight);
-
-document.getElementById("container3D").appendChild(renderer.domElement);
-
-
-
-
-const topLight = new THREE.DirectionalLight(0xffffff, 1);
-topLight.position.set(50, 50, 500); //top-left-ish
-topLight.castShadow = true;
-scene.add(topLight);
-
-// const ambientLight = new THREE.AmbientLight(0x333333, objectToRender == "camera" ? 5 : 1);
-const ambientLight = new THREE.AmbientLight(0x333333, 1);
-scene.add(ambientLight);
-
-
-
-//########Add controls to the camera########
-// if (objectToRender == "camera") {
-//     controls = new OrbitControls(camera, renderer.domElement)
-// }
-controls = new OrbitControls(camera, renderer.domElement)
-
-
-//Render the scene
+//######### Render the scene ###############
 function animate() {
     requestAnimationFrame(animate)
     // letObjTrackMouse("trackedObjName")
@@ -85,19 +87,18 @@ window.addEventListener("resize", function() {
 //     mouseY = e.clientY;
 // }
 //####Let object face mouse cursor, need to activate mouseX/Y for this to work
-function letObjTrackMouse(objName) {
-    if (object && objectToRender == objName) {
-            object.rotation.y = -3 + mouseX / window.innerWidth * 3;
-            object.rotation.x = -1.2 + mouseY * 2.5 / window.innerWidth;
-    }
-}
+// function letObjTrackMouse(objName) {
+//     if (object && objectToRender == objName) {
+//             object.rotation.y = -3 + mouseX / window.innerWidth * 3;
+//             object.rotation.x = -1.2 + mouseY * 2.5 / window.innerWidth;
+//     }
+// }
 
 
 animate();
 
 
 //=======end scene setup===========
-
 
 const raycaster = new THREE.Raycaster();
 
