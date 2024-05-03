@@ -105,7 +105,9 @@ document.addEventListener("pointerdown", onPointerDown);
 
 function onPointerDown(event) {
     const colorOnClickValue = document.querySelector("#colorOnClick").checked;
-    if (!colorOnClickValue) {
+    const canvas = document.querySelector("#container3D canvas")
+
+    if (!colorOnClickValue | event.target !== canvas) {
         return;
     }
     const coords = new THREE.Vector2(
@@ -130,8 +132,8 @@ const selectElem = document.querySelector("#sceneSelect")
 loadButton.addEventListener("click", onButtonClick)
 
 function onButtonClick(event) {
-    const selectedScene = selectElem.value;
 
+    const selectedScene = selectElem.value;
     if (selectedScene == objectToRender) {
         return;
     }
