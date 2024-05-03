@@ -6,14 +6,14 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 const scene = new THREE.Scene();
 const camera =  new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 // camera.position.z = objectToRender === "camera" ? 5 : 0;
-camera.position.z = 5;
+camera.position.set(2, 3, 3)
 
 //########for tracking mouse cursor to let obj face it
 // let mouseX = window.innerWidth / 2;
 // let mouseY = window.innerHeight / 2;
 
 
-
+//scene to render
 let object;
 
 let controls;
@@ -104,6 +104,10 @@ const raycaster = new THREE.Raycaster();
 document.addEventListener("pointerdown", onPointerDown);
 
 function onPointerDown(event) {
+    const colorOnClickValue = document.querySelector("#colorOnClick").checked;
+    if (!colorOnClickValue) {
+        return;
+    }
     const coords = new THREE.Vector2(
         (event.clientX / renderer.domElement.clientWidth) * 2 -1,
         -((event.clientY / renderer.domElement.clientHeight) * 2 -1)
@@ -119,4 +123,28 @@ function onPointerDown(event) {
         selectedObject.material.color = color;
 
     }
+}
+
+const loadButton = document.querySelector("#loadButton");
+const selectElem = document.querySelector("#sceneSelect")
+loadButton.addEventListener("click", onButtonClick)
+
+function onButtonClick(event) {
+    const selectedScene = selectElem.value;
+
+    if (selectedScene == objectToRender) {
+        return;
+    }
+
+
+    scene.remove(object)
+
+    objectToRender = selectedScene;
+    loader.load(
+        `models/${objectToRender}/scene.gltf`,
+        function ( gltf) {
+            //load file to the scene
+            object = gltf.scene;
+            scene.add(object);
+        })
 }

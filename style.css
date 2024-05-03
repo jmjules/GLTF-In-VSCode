@@ -11,7 +11,7 @@ body {
 }
 
 header {
-    margin-top: 3rem;
+    margin: 3rem 2rem;
     text-align: center;
     color: #eee;
 }
@@ -28,3 +28,25 @@ header h1 {
     top: 0;
     left: 0;
 }
+
+.selectionMenu {
+    position: absolute;
+    z-index: 100;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 1rem;
+    border-radius: 1rem;
+    background-color: gray;
+    width: min(60%, 450px);
+
+    display: flex;
+    gap: .25rem;
+    flex-direction: column;
+}
+
+/* .selectionMenu *{
+    padding: .5rem;
+    font-size: 1rem;
+    border-radius: 1rem;
+} */

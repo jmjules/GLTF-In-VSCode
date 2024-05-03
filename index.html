@@ -16,11 +16,26 @@
 </head>
 <body>
     <header>
-        <h1>Showing a 3d model in the browser using Three.js</h1>
+        <h1>Viewing GLTF with Three.js</h1>
     </header>
 
     <main>
         <div id="container3D"></div>
+
+        <div class="selectionMenu">
+          <div class="sceneSelectWrapper">
+            <select id="sceneSelect">
+              <option value="desk">Desk</option>
+              <option value="camera">Camera</option>
+              <option value="frog">Frog</option>
+            </select>
+            <button id="loadButton" type="submit">Load scene</button>
+          </div>
+          <label>
+            Color on click
+            <input type="checkbox" id="colorOnClick" checked>
+          </label>
+        </div>
     </main>
 
     <script type="module" src="main.js"></script>
